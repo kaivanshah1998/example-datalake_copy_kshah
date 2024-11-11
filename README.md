@@ -1,37 +1,35 @@
 # Beyond Bets
 
-## Before you begin
+##  Updates
+Please run the demo.py to see the reflected changes
 
-Install PySpark.
+Below are the improvements to the codebase:
 
-#### Mac
-To install PySpark on most linux/mac machines just run
+### Core Framework Improvements
 
-`pip install pyspark`
+- **Base Time Series Framework**: Introduced `TimeSeriesTransform` base class to eliminate code duplication across time-based aggregations (PlayerDaily, MarketHourly, etc.), making the codebase more maintainable.
 
-#### Windows
-PySpark requires java. On Windows we recommend using OpenJDK which can be downloaded from [here](https://learn.microsoft.com/en-us/java/openjdk/download).
+- **Standardized Time Aggregations**: Unified the approach to time-based aggregations by making time units ("hour" or "day") and grouping columns configurable parameters, reducing the chance of inconsistencies.
 
-If you are using windows you will also likely need to set the `PYSPARK_PYTHON` environment variable. When using from within a virtual environment you can set it as `PYSPARK_PYTHON=python`. Otherwise, you will need to provide the path to the executable.
+### New Analytics Features
 
-## Install the package
-You will need to install the `beyond_bets` package to complete this project. There are multiple ways to do this, for an editable install navigate to the root directory of the package and run the following:
+- **VIP Analytics**: Implemented `TopPlayers` transform to identify the top 1% of players by spend in the last week, using window functions for percentile calculations.
 
-`pip install -e .`
+- **Market Analysis Capability**: Added `BetGrader` transform with a 15-minute rolling window to analyze bet sizes relative to market averages.
 
-To test the install run `hello_world.py` located in the `examples` directory. You should see a table with the numbers 1-10 in the console.
+### Future Improvements
 
-## Problem
-Beyond Bets is a new venture from BeyondTrust to track metrics for sports betting markets. The current codebase works, but the rapid increase in feature requests has left the code in significant need of refactoring. WITHOUT breaking any backwards compatability please add the following new features. It is highly recommended that you improve the codebase as you implement your features.
+#### Architecture & Data Quality
+- **Medallion Architecture**: Implement proper bronze/silver/gold layer structure to separate ingestion, transformation, and aggregation stages.
+- **Data Governance**: Add comprehensive QC checks and data quality monitoring throughout the pipeline.
+- **Testing Framework**: Develop full suite of unit tests, functional tests, and end-to-end testing scenarios.
 
-* The `PlayerDaily` and `MarketHourly` transforms have been very popular. Analysts now are requesting `PlayerHourly`, `MarketDaily`, and `PlayerMarketDaily` transforms.
+#### Infrastructure & Performance
+- **Infrastructure Sizing**: Properly size compute resources based on workload patterns rather than relying solely on auto-scaling.
+- **Data Management**: Implement sophisticated merge/upsert strategies for handling data appends, particularly for slowly changing dimensions.
 
-* Management wants to start a new VIP program for our biggest bettors. Implement `TopPlayers`, which will return the top 1% of all players by total spend in the past week.
+#### Spark Optimizations
+- **Caching Strategy**: Implement strategic dataframe caching when dataset sizes grow beyond current scale.
+- **Performance Tuning**: Fine-tune Spark configurations based on actual production workload characteristics.
 
-* Finance wants to know if the market conditions are changing drastically. Implement `BetGrader`, which will grade each bet relative to all bets within the same market in the last 15 minutes. For example, if a bet for $15 was placed in market A at 1:15pm, and the average bet size in market A between 1:00 and 1:15 was $10 then the grade for this bet would be $15/$10.
 
-Remember the goal is NOT to perfect the codebase. The goal is to implement the requested features while making some improvements.
-
-Please note, in a real data warehouse the data would sit in physical tables. In order to not write a bunch of junk to your hard drive the datasets are randomly generated.
-
-Lastly, all logic needs to be contained within the beyond_bets package itself. Any code in the `examples` directory is just to demonstrate how the code might be used.

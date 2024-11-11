@@ -2,11 +2,11 @@ from beyond_bets.base.time_series import TimeSeriesTransform
 from beyond_bets.datasets.bets import Bets
 
 
-class MarketHourly(TimeSeriesTransform):
+class PlayerHourly(TimeSeriesTransform):
     def __init__(self):
         super().__init__(
-            group_by_cols=["market"],
+            group_by_cols=["player_id"],
             time_unit="hour"
         )
-        self._name = "MarketHourly"
-        self._inputs = {"bets": Bets()}
+        self._name = "PlayerHourly"
+        self._inputs = {"bets": Bets()} 
